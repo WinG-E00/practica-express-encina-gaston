@@ -79,3 +79,51 @@ export const crearUnPersonaje = (req, res) => {
 };
 
 
+
+//Funcion para modificar un personaje
+ 
+export const actualizarUnPersonaje = (req, res) => {
+
+    const idPersonaje = Number(req.params.id);
+
+    // Validar que el ID es un número válido
+    if (isNaN(idPersonaje)) {
+        return res.status(400).json({ message: "El ID debe ser un número válido" });
+    }
+
+    // Validar que el body no esté vacío
+    const updates = req.body || {};
+    if (Object.keys(updates).length === 0) {
+        return res.status(400).json({ message: "El body no puede estar vacío; debe contener al menos un campo" });
+    }
+
+    // No permitir actualizar el id directamente
+    if (Object.prototype.hasOwnProperty.call(updates, 'id')) {
+        delete updates.id;
+    }
+
+    // Validar que los campos enviados no tengan valores vacíos
+    for (const [key, value] of Object.entries(updates)) {
+        if (value === "" || value === null || value === undefined) {
+            return res.status(400).json({ message: `El campo '${key}' no puede tener un valor vacío` });
+        }
+    }
+
+    // Buscar el personaje por id
+    const index = personajes.findIndex(p => p.id === idPersonaje);
+
+    if (index === -1) {
+        return res.status(404).json({ message: `Personaje con el id #${idPersonaje} no ha sido encontrado` });
+    }
+
+    // Actualizar solo los campos enviados
+    const personaje = personajes[index];
+    const actualizado = { ...personaje, ...updates };
+
+    // Reemplazar en el arreglo
+    personajes[index] = actualizado;
+
+    return res.json({ message: "Personaje actualizado", actualizado });
+
+};
+
