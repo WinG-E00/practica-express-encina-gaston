@@ -127,3 +127,28 @@ export const actualizarUnPersonaje = (req, res) => {
 
 };
 
+
+
+// Funcion para eliminar un personaje
+export const eliminarUnPersonaje = (req, res) => {
+
+    const idPersonaje = Number(req.params.id);
+
+    // Validar que el ID es un número válido
+    if (isNaN(idPersonaje)) {
+        return res.status(400).json({ message: "El ID debe ser un número válido" });
+    }
+
+    // Buscar el personaje por id
+    const index = personajes.findIndex(p => p.id === idPersonaje);
+
+    if (index === -1) {
+        return res.status(404).json({ message: `Personaje con el id #${idPersonaje} no ha sido encontrado` });
+    }
+
+    // Eliminar elemento del arreglo y obtener el eliminado
+    const [eliminado] = personajes.splice(index, 1);
+
+    return res.json({ message: "Personaje eliminado", eliminado });
+
+};
