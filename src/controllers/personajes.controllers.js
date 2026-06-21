@@ -42,3 +42,40 @@ export const obtenerUnPersonajePorId = (req, res) => {
 };
 
 
+
+//funcion para agregar un personaje
+export const crearUnPersonaje = (req, res) => {
+
+    const { nombre, imagen} = req.body;
+
+    //Validacion para que ni nombre ni imagen esten vacios
+    if (nombre === "") {
+        return res.status(400).json({
+            message:"El nombre no puede estar vacio",
+        })
+    }else if( imagen === "") {
+        return res.status(400).json({
+            message:"La imagen no puede estar vacia",
+        })
+    }
+
+
+    const newPersonaje = {
+        id: personajes.length + 1,
+        nombre,
+        imagen
+    };
+
+
+    personajes.push(newPersonaje);
+
+
+    res.status(201).json({
+        message: "Personaje creado correctamente",
+        newPersonaje
+    });
+
+
+};
+
+
